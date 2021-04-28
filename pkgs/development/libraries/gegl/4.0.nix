@@ -1,6 +1,6 @@
-{ lib, stdenv
+{ lib
+, stdenv
 , fetchurl
-, fetchpatch
 , pkg-config
 , vala
 , gobject-introspection
@@ -36,24 +36,15 @@
 
 stdenv.mkDerivation rec {
   pname = "gegl";
-  version = "0.4.28";
+  version = "0.4.30";
 
   outputs = [ "out" "dev" "devdoc" ];
   outputBin = "dev";
 
   src = fetchurl {
     url = "https://download.gimp.org/pub/gegl/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    sha256 = "sha256-HRENhXfVTMo7NCOTFb03xXzLJ91DVWVQdKLSs/2JeQA=";
+    sha256 = "sha256-wRJ4LPQJaWniMhfM36vkIoTjXVQ1/wxD1A5McPrsqN0=";
   };
-
-  patches = [
-    # Fix build with GLib 2.68
-    # https://gitlab.gnome.org/GNOME/gegl/-/merge_requests/93
-    (fetchpatch {
-      url = "https://gitlab.gnome.org/GNOME/gegl/-/commit/130cd583530dc41adfdec76d6662302f833e6033.patch";
-      sha256 = "iZiNpOZqVvDObPeQFQo8fOEw24hSny4ryW0/3/RdChk=";
-    })
-  ];
 
   nativeBuildInputs = [
     pkg-config
@@ -113,8 +104,8 @@ stdenv.mkDerivation rec {
   NIX_CFLAGS_COMPILE = "-lm";
 
   postPatch = ''
-    chmod +x tests/opencl/opencl_test.sh tests/buffer/buffer-tests-run.sh
-    patchShebangs tests/ff-load-save/tests_ff_load_save.sh tests/opencl/opencl_test.sh tests/buffer/buffer-tests-run.sh tools/xml_insert.sh
+    chmod +x tests/opencl/opencl_test.sh
+    patchShebangs tests/ff-load-save/tests_ff_load_save.sh tests/opencl/opencl_test.sh tools/xml_insert.sh
   '';
 
   # tests fail to connect to the com.apple.fonts daemon in sandboxed mode
